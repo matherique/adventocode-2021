@@ -21,6 +21,7 @@ func main() {
 	lines := strings.Split(content, "\n")
 
 	var (
+		a int
 		d int
 		h int
 	)
@@ -33,10 +34,12 @@ func main() {
 		switch m {
 		case "forward":
 			h += n
+
+			d += a * n
 		case "up":
-			d -= n
+			a -= n
 		case "down":
-			d += n
+			a += n
 		}
 	}
 
