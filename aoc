@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+then
+  echo "missing day"
+  exit 1
+fi
+
+day=$1
+folder=$(pwd)/day$day
+input=$folder/in
+code=$folder/solve.go
+url=https://adventofcode.com/2021/day/$day/input
+
+echo Creating folder of day $day
+
+mkdir $folder
+
+echo Downloading input day $day
+curl -s $url --cookie "$COOKIE" > $input
+
+echo "Creating solge.go file"
+touch $code
+
+cd $folder
