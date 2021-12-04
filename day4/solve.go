@@ -24,17 +24,34 @@ func main() {
 	numbers := strings.Split(bingo[0], ",")
 	boards := parseBoards(bingo[1:])
 
+	wt := []int{}
 	for _, n := range numbers {
-		for _, board := range boards {
+		for i, board := range boards {
 			move(&board, n)
 			if win(&board) {
 				nmb, _ := strconv.Atoi(n)
 				s := score(&board)
-				fmt.Println("n*s=", nmb*s)
-				return
+				if !already_win(wt, i) {
+					wt = append(wt, i)
+				}
+
+				if len(wt) == len(boards) {
+					fmt.Printf("board %d wins -> %d*%d=%d\n", i+1, nmb, s, nmb*s)
+					return
+				}
 			}
 		}
 	}
+
+}
+
+func already_win(wt []int, w int) bool {
+	for _, ws := range wt {
+		if ws == w {
+			return true
+		}
+	}
+	return false
 }
 
 func score(board *[][]string) int {
