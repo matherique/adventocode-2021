@@ -21,6 +21,75 @@ func main() {
 	lines := strings.Split(content, "\n")
 	lines = lines[:len(lines)-1]
 
+	lines_most := lines
+	lines_least := lines
+
+	size := len(lines[0]) - 1
+	var i int
+
+	// calculate oxygen generator rating
+	for {
+		most, _ := mostleast(lines_most)
+
+		m := string(most[i])
+
+		ml := []string{}
+
+		for _, line := range lines_most {
+			if string(line[i]) == m {
+				ml = append(ml, line)
+			}
+		}
+
+		lines_most = ml
+
+		i += 1
+
+		if i > size || len(lines_most) == 1 {
+			break
+		}
+	}
+
+	i = 0
+	// calculate CO2 scrubber rating
+	for {
+		_, least := mostleast(lines_least)
+
+		m := string(least[i])
+
+		ll := []string{}
+
+		for _, line := range lines_least {
+			if string(line[i]) == m {
+				ll = append(ll, line)
+			}
+		}
+
+		lines_least = ll
+
+		i += 1
+
+		if i > size || len(lines_least) == 1 {
+			break
+		}
+	}
+
+	ogr := lines_most[0]
+	csr := lines_least[0]
+
+	ogrI, _ := strconv.ParseInt(ogr, 2, 64)
+	csrI, _ := strconv.ParseInt(csr, 2, 64)
+
+	fmt.Println(ogrI, csrI)
+
+	fmt.Println(ogrI * csrI)
+}
+
+func remove(s []string, idx int) []string {
+	return append(s[:idx], s[idx+1:]...)
+}
+
+func mostleast(lines []string) (string, string) {
 	sum := make([]int, len(lines[0]))
 
 	for _, line := range lines {
@@ -34,39 +103,22 @@ func main() {
 	}
 
 	size := len(lines)
-	var most, least string
+	var most string
+	var least string
 
 	for _, i := range sum {
-		if i < (size / 2) {
-			most += "0"
+		switch true {
+		case size-i > i:
 			least += "1"
-		} else {
-			most += "1"
+			most += "0"
+		case size-i < i:
 			least += "0"
+			most += "1"
+		case size-i == i:
+			least += "0"
+			most += "1"
 		}
 	}
 
-	m, _ := strconv.ParseInt(most, 2, 64)
-	l, _ := strconv.ParseInt(least, 2, 64)
-
-	fmt.Println(m * l)
-}
-
-func commoms(list []string) (string, string) {
-	var ones, zeros int
-
-	for _, i := range list {
-		if i == "1" {
-			ones += 1
-			continue
-		}
-
-		zeros += 1
-	}
-
-	if ones > zeros {
-		return "1", "0"
-	}
-
-	return "0", "1"
+	return most, least
 }
