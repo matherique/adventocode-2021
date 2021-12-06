@@ -22,38 +22,44 @@ func main() {
 
 	pop := parse(lines)
 	var day int
-	limit := 80
+	limit := 256
 
+	// this solution is much better then the part 1
 	for {
-		// fmt.Printf("%d day(s): %v\n", day, pop)
 		if day == limit {
 			break
 		}
 
-		for k, f := range pop {
-			nv := f - 1
-			if nv == -1 {
-				nv = 6
-			}
+		n0, n1, n2, n3, n4, n5, n6, n7, n8 := pop[0], pop[1], pop[2], pop[3], pop[4], pop[5], pop[6], pop[7], pop[8]
 
-			if f == 0 {
-				pop = append(pop, 8)
-			}
-
-			pop[k] = nv
-		}
+		pop[0] = n1
+		pop[1] = n2
+		pop[2] = n3
+		pop[3] = n4
+		pop[4] = n5
+		pop[5] = n6
+		pop[6] = n7 + n0
+		pop[7] = n8
+		pop[8] = n0
 
 		day += 1
 	}
 
-	fmt.Println("total =", len(pop))
+	fmt.Println(pop)
+	var sum uint64
+	for _, v := range pop {
+		sum += v
+	}
+
+	fmt.Println("total =", sum)
 }
 
-func parse(list []string) []int {
-	res := []int{}
-	for _, l := range list {
-		n, _ := strconv.Atoi(l)
-		res = append(res, n)
+func parse(list []string) [9]uint64 {
+	res := [9]uint64{}
+
+	for _, i := range list {
+		n, _ := strconv.Atoi(i)
+		res[n] += 1
 	}
 
 	return res
