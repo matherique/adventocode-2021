@@ -20,21 +20,76 @@ func main() {
 
 	content := string(b)
 	pos := strings.Split(content[:len(content)-1], ",")
+	m := max(pos)
 
-	fuel := []int{}
-	for _, snp := range pos {
-		np, _ := strconv.Atoi(snp)
+	min := math.MaxInt
+	i := 0
+	for {
+		if i == m {
+			break
+		}
 		sum := 0
+
 		for _, sp := range pos {
 			p, _ := strconv.Atoi(sp)
+			diff := abs(i - p)
+			a := z(diff)
 
-			sum += abs(np - p)
+			sum += a
+			// fmt.Printf("Move from %d to %d: %d fuel\n", p, np, a)
 		}
-		fuel = append(fuel, sum)
+		// fmt.Println("==========", sum, "==========")
+		if sum < min {
+			min = sum
+		}
+
 		sum = 0
+		i += 1
 	}
 
-	fmt.Println(min(fuel), fuel)
+	fmt.Println(min)
+}
+
+func array(size int) []int {
+	l := []int{}
+	var i int
+	for {
+		if i == size {
+			break
+		}
+
+		l = append(l, i)
+		i += 1
+	}
+
+	return l
+}
+
+func z(max int) int {
+	i, sum := 0, 0
+
+	for {
+		sum += i
+		i += 1
+
+		if i > max {
+			break
+		}
+	}
+
+	return sum
+}
+
+func max(list []string) int {
+	m := -1
+	for _, item := range list {
+		i, _ := strconv.Atoi(item)
+		if i > m {
+			m = i
+		}
+	}
+
+	return m
 }
 
 func abs(x int) int {
@@ -42,15 +97,4 @@ func abs(x int) int {
 		return x
 	}
 	return x * (-1)
-}
-
-func min(x []int) int {
-	m := math.MaxInt
-	for _, i := range x {
-		if i < m {
-			m = i
-		}
-	}
-
-	return m
 }
